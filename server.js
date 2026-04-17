@@ -46,7 +46,7 @@ app.post('/api/responder', upload.single('imagem'), async (req, res) => {
   }[tom] || '';
 
   try {
-    const ai = new GoogleGenAI({ apiKey });
+    const ai = new GoogleGenAI({ apiKey, httpOptions: { apiVersion: 'v1' } });
 
     const contents = [];
 
@@ -66,7 +66,7 @@ app.post('/api/responder', upload.single('imagem'), async (req, res) => {
     contents.push({ text: textoMensagem + (tomInstrucao ? `\n\nInstrução de tom: ${tomInstrucao}` : '') });
 
     const result = await ai.models.generateContent({
-      model: 'gemini-2.5-flash-preview-04-17',
+      model: 'gemini-2.0-flash',
       config: { systemInstruction: SYSTEM_PROMPT },
       contents,
     });
