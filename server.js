@@ -1,6 +1,6 @@
 const express = require('express');
 const multer = require('multer');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { GoogleGenAI } = require('@google/genai');
 const path = require('path');
 
 const app = express();
@@ -46,16 +46,12 @@ app.post('/api/responder', upload.single('imagem'), async (req, res) => {
   }[tom] || '';
 
   try {
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
-      systemInstruction: SYSTEM_PROMPT,
-    });
+    const ai = new GoogleGenAI({ apiKey });
 
-    const parts = [];
+    const contents = [];
 
     if (imagem) {
-      parts.push({
+      contents.push({
         inlineData: {
           data: imagem.buffer.toString('base64'),
           mimeType: imagem.mimetype,
@@ -67,10 +63,15 @@ app.post('/api/responder', upload.single('imagem'), async (req, res) => {
       ? `Reclamação/mensagem do cliente:\n\n${mensagem}`
       : 'Analise a imagem acima que contém a reclamação ou mensagem do cliente.';
 
-    parts.push({ text: textoMensagem + (tomInstrucao ? `\n\nInstrução de tom: ${tomInstrucao}` : '') });
+    contents.push({ text: textoMensagem + (tomInstrucao ? `\n\nInstrução de tom: ${tomInstrucao}` : '') });
 
-    const result = await model.generateContent(parts);
-    const resposta = result.response.text().trim();
+    const result = await ai.models.generateContent({
+      model: 'gemini-2.5-flash-preview-04-17',
+      config: { systemInstruction: SYSTEM_PROMPT },
+      contents,
+    });
+
+    const resposta = result.text.trim();
     res.json({ resposta });
   } catch (err) {
     if (err.message?.includes('API_KEY_INVALID') || err.status === 400) {
