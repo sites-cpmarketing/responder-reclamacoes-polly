@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Central de Respostas</title>
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --surface: #13161e;
+      --surface2: #1a1e2a;
+      --surface3: #212535;
+      --border: #2a2f3e;
+      --border2: #353b50;
+      --accent: #6c63ff;
+      --accent2: #8b85ff;
+      --accent-glow: rgba(108, 99, 255, 0.18);
+      --green: #22c55e;
+      --green-glow: rgba(34, 197, 94, 0.15);
+      --red: #f87171;
+      --text: #e2e8f0;
+      --text2: #94a3b8;
+      --text3: #64748b;
+      --radius: 14px;
+      --radius-sm: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 32px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, var(--accent), #a78bfa);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .logo-text {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .logo-sub {
+      font-size: 11px;
+      color: var(--text3);
+      font-weight: 400;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-config {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text2);
+      padding: 7px 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .btn-config:hover {
+      border-color: var(--accent);
+      color: var(--text);
+      background: var(--surface3);
+    }
+
+    /* MAIN */
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      max-width: 1280px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 32px 24px;
+      gap: 20px;
+    }
+
+    /* PANELS */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .panel-icon.blue { background: rgba(99, 179, 237, 0.12); }
+    .panel-icon.purple { background: var(--accent-glow); }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .panel-body {
+      padding: 18px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--surface2);
+      padding: 4px;
+      border-radius: var(--radius-sm);
+    }
+
+    .tab {
+      flex: 1;
+      padding: 7px 12px;
+      border: none;
+      background: transparent;
+      color: var(--text3);
+      cursor: pointer;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 500;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .tab.active {
+      background: var(--surface3);
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .tab:hover:not(.active) { color: var(--text2); }
+
+    /* TEXTAREA */
+    textarea {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: 13.5px;
+      line-height: 1.6;
+      padding: 14px;
+      resize: none;
+      width: 100%;
+      min-height: 160px;
+      transition: border 0.15s;
+      font-family: inherit;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    textarea::placeholder { color: var(--text3); }
+
+    /* DROP ZONE */
+    .drop-zone {
+      border: 2px dashed var(--border2);
+      border-radius: var(--radius-sm);
+      padding: 28px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--surface2);
+      position: relative;
+    }
+
+    .drop-zone:hover, .drop-zone.drag-over {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+    }
+
+    .drop-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .drop-icon { font-size: 28px; margin-bottom: 8px; }
+
+    .drop-text {
+      font-size: 13px;
+      color: var(--text2);
+    }
+
+    .drop-text strong { color: var(--accent2); }
+
+    .drop-hint {
+      font-size: 11px;
+      color: var(--text3);
+      margin-top: 4px;
+    }
+
+    .preview-img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: contain;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      margin-top: 8px;
+    }
+
+    /* TOM SELECTOR */
+    .label {
+      font-size: 11.5px;
+      color: var(--text3);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .tom-options {
+      display: flex;
+      gap: 8px;
+    }
+
+    .tom-btn {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface2);
+      color: var(--text2);
+      cursor: pointer;
+      font-size: 12px;
+      text-align: center;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .tom-btn:hover { border-color: var(--border2); color: var(--text); }
+
+    .tom-btn.selected {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+      color: var(--accent2);
+      font-weight: 600;
+    }
+
+    /* SUBMIT BTN */
+    .btn-gerar {
+      background: linear-gradient(135deg, var(--accent), #8b85ff);
+      border: none;
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 13px;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      letter-spacing: -0.2px;
+    }
+
+    .btn-gerar:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(108, 99, 255, 0.4);
+    }
+
+    .btn-gerar:active { transform: translateY(0); }
+
+    .btn-gerar:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* SPINNER */
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* RESULTADO */
+    .resultado-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .resultado-vazio {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--text3);
+      min-height: 200px;
+    }
+
+    .resultado-vazio-icon { font-size: 40px; opacity: 0.4; }
+    .resultado-vazio-text { font-size: 13px; text-align: center; line-height: 1.6; }
+
+    .resultado-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--text);
+      white-space: pre-wrap;
+      flex: 1;
+      min-height: 180px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .resultado-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-copiar {
+      flex: 1;
+      padding: 11px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--green);
+      background: var(--green-glow);
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .btn-copiar:hover {
+      background: rgba(34, 197, 94, 0.25);
+      box-shadow: 0 0 12px var(--green-glow);
+    }
+
+    .btn-copiar.copiado {
+      border-color: var(--green);
+      background: var(--green-glow);
+    }
+
+    .btn-limpar {
+      padding: 11px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text3);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .btn-limpar:hover { border-color: var(--red); color: var(--red); }
+
+    /* ERRO */
+    .erro-box {
+      background: rgba(248, 113, 113, 0.1);
+      border: 1px solid rgba(248, 113, 113, 0.3);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      color: var(--red);
+      font-size: 13px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    /* HISTÓRICO */
+    .historico-lista {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 180px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .historico-lista::-webkit-scrollbar { width: 4px; }
+    .historico-lista::-webkit-scrollbar-track { background: transparent; }
+    .historico-lista::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+    .historico-item {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .historico-item:hover { border-color: var(--border2); background: var(--surface3); }
+
+    .historico-msg {
+      font-size: 12px;
+      color: var(--text2);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .historico-time {
+      font-size: 10.5px;
+      color: var(--text3);
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      width: 420px;
+      max-width: 90vw;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .modal-desc {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    .modal-desc a {
+      color: var(--accent2);
+      text-decoration: none;
+    }
+
+    .input-field {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: 13.5px;
+      padding: 11px 14px;
+      width: 100%;
+      transition: border 0.15s;
+      font-family: inherit;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .btn-secondary {
+      padding: 9px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text2);
+      cursor: pointer;
+      font-size: 13px;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+
+    .btn-secondary:hover { border-color: var(--border2); color: var(--text); }
+
+    .btn-primary {
+      padding: 9px 20px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+
+    .btn-primary:hover { background: var(--accent2); }
+
+    /* STATUS BADGE */
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      color: var(--text3);
+      background: var(--surface2);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text3);
+    }
+
+    .status-dot.ok { background: var(--green); box-shadow: 0 0 6px var(--green); }
+
+    /* LOADING SKELETON */
+    .skeleton {
+      background: linear-gradient(90deg, var(--surface2) 25%, var(--surface3) 50%, var(--surface2) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.2s infinite;
+      border-radius: 6px;
+    }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+
+    /* CHAR COUNTER */
+    .char-counter {
+      text-align: right;
+      font-size: 11px;
+      color: var(--text3);
+      margin-top: -8px;
+    }
+
+    @media (max-width: 768px) {
+      main { grid-template-columns: 1fr; }
+      header { padding: 14px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">💬</div>
+    <div>
+      <div class="logo-text">Central de Respostas</div>
+      <div class="logo-sub">Atendimento ao Cliente com IA</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="status-badge" id="statusBadge">
+      <div class="status-dot" id="statusDot"></div>
+      <span id="statusText">Sem API Key</span>
+    </div>
+    <button class="btn-config" onclick="abrirModal()">
+      ⚙️ Configurar
+    </button>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main>
+
+  <!-- PAINEL ESQUERDO: INPUT -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-icon blue">📥</div>
+      <span class="panel-title">Reclamação do Cliente</span>
+    </div>
+    <div class="panel-body">
+
+      <!-- TABS -->
+      <div class="tabs">
+        <button class="tab active" id="tabTexto" onclick="switchTab('texto')">
+          ✏️ Texto
+        </button>
+        <button class="tab" id="tabImagem" onclick="switchTab('imagem')">
+          🖼️ Print / Imagem
+        </button>
+      </div>
+
+      <!-- TAB TEXTO -->
+      <div id="secaoTexto">
+        <textarea
+          id="mensagemInput"
+          placeholder="Cole aqui a mensagem de reclamação do cliente...
+
+Exemplo: 'Meu pedido chegou errado e já faz 3 dias que ninguém me dá uma resposta. Péssimo atendimento!'"
+          oninput="atualizarContador()"
+        ></textarea>
+        <div class="char-counter"><span id="charCount">0</span> caracteres</div>
+      </div>
+
+      <!-- TAB IMAGEM -->
+      <div id="secaoImagem" style="display:none;">
+        <div class="drop-zone" id="dropZone">
+          <input type="file" id="imagemInput" accept="image/*" onchange="onImageChange(event)" />
+          <div class="drop-icon">📎</div>
+          <div class="drop-text"><strong>Clique para selecionar</strong> ou arraste aqui</div>
+          <div class="drop-hint">PNG, JPG, JPEG — máx. 10MB</div>
+        </div>
+        <img id="previewImg" class="preview-img" style="display:none;" />
+      </div>
+
+      <!-- TOM -->
+      <div>
+        <div class="label">Tom da resposta</div>
+        <div class="tom-options">
+          <button class="tom-btn" id="tom-formal" onclick="selecionarTom('formal')">🎩 Formal</button>
+          <button class="tom-btn selected" id="tom-neutro" onclick="selecionarTom('neutro')">⚖️ Neutro</button>
+          <button class="tom-btn" id="tom-simpatico" onclick="selecionarTom('simpatico')">😊 Simpático</button>
+        </div>
+      </div>
+
+      <!-- BOTÃO -->
+      <button class="btn-gerar" id="btnGerar" onclick="gerarResposta()">
+        <span id="btnIcon">✨</span>
+        <span id="btnText">Gerar Resposta</span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- PAINEL DIREITO: OUTPUT -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-icon purple">🤖</div>
+      <span class="panel-title">Resposta Gerada</span>
+    </div>
+    <div class="panel-body">
+
+      <div class="resultado-area" id="resultadoArea">
+        <div class="resultado-vazio" id="resultadoVazio">
+          <div class="resultado-vazio-icon">💭</div>
+          <div class="resultado-vazio-text">
+            Cole a reclamação ao lado e clique em<br><strong style="color: var(--text)">Gerar Resposta</strong> para ver a sugestão aqui.
+          </div>
+        </div>
+      </div>
+
+      <!-- HISTÓRICO -->
+      <div id="historicoSection" style="display:none;">
+        <div class="label" style="margin-bottom:8px;">Histórico recente</div>
+        <div class="historico-lista" id="historicoLista"></div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- MODAL CONFIG -->
+<div class="modal-overlay" id="modalOverlay" onclick="fecharModalFora(event)">
+  <div class="modal">
+    <div class="modal-title">⚙️ Configurações</div>
+    <div class="modal-desc">
+      Insira sua <strong>API Key do Google Gemini</strong> para usar a IA.<br>
+      Obtenha gratuitamente em <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com</a>.<br>
+      A chave é salva apenas no seu navegador.
+    </div>
+    <input
+      type="password"
+      class="input-field"
+      id="apiKeyInput"
+      placeholder="AIza..."
+      autocomplete="off"
+    />
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="fecharModal()">Cancelar</button>
+      <button class="btn-primary" onclick="salvarConfig()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let tabAtual = 'texto';
+  let tomAtual = 'neutro';
+  let historico = [];
+
+  // INIT
+  window.onload = () => {
+    const key = localStorage.getItem('anthropic_key');
+    atualizarStatus(!!key);
+    if (key) document.getElementById('apiKeyInput').value = key;
+    if (!key) setTimeout(abrirModal, 500);
+    carregarHistorico();
+  };
+
+  function atualizarStatus(temKey) {
+    const dot = document.getElementById('statusDot');
+    const txt = document.getElementById('statusText');
+    if (temKey) {
+      dot.className = 'status-dot ok';
+      txt.textContent = 'API Conectada';
+    } else {
+      dot.className = 'status-dot';
+      txt.textContent = 'Sem API Key';
+    }
+  }
+
+  // TABS
+  function switchTab(tab) {
+    tabAtual = tab;
+    document.getElementById('secaoTexto').style.display = tab === 'texto' ? 'flex' : 'none';
+    document.getElementById('secaoTexto').style.flexDirection = 'column';
+    document.getElementById('secaoImagem').style.display = tab === 'imagem' ? 'block' : 'none';
+    document.getElementById('tabTexto').className = 'tab' + (tab === 'texto' ? ' active' : '');
+    document.getElementById('tabImagem').className = 'tab' + (tab === 'imagem' ? ' active' : '');
+  }
+
+  // TOM
+  function selecionarTom(tom) {
+    tomAtual = tom;
+    ['formal','neutro','simpatico'].forEach(t => {
+      document.getElementById('tom-'+t).className = 'tom-btn' + (t === tom ? ' selected' : '');
+    });
+  }
+
+  // CHAR COUNTER
+  function atualizarContador() {
+    const n = document.getElementById('mensagemInput').value.length;
+    document.getElementById('charCount').textContent = n;
+  }
+
+  // IMAGE
+  function onImageChange(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    const img = document.getElementById('previewImg');
+    img.src = url;
+    img.style.display = 'block';
+  }
+
+  // DRAG
+  const dz = document.getElementById('dropZone');
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+  dz.addEventListener('drop', e => {
+    e.preventDefault();
+    dz.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      document.getElementById('imagemInput').files = dt.files;
+      const url = URL.createObjectURL(file);
+      const img = document.getElementById('previewImg');
+      img.src = url;
+      img.style.display = 'block';
+    }
+  });
+
+  // GERAR
+  async function gerarResposta() {
+    const apiKey = localStorage.getItem('anthropic_key');
+    if (!apiKey) { abrirModal(); return; }
+
+    const mensagem = document.getElementById('mensagemInput').value.trim();
+    const imagemInput = document.getElementById('imagemInput');
+    const imagem = imagemInput.files[0];
+
+    if (tabAtual === 'texto' && !mensagem) {
+      mostrarErro('Cole a mensagem do cliente antes de gerar.');
+      return;
+    }
+    if (tabAtual === 'imagem' && !imagem) {
+      mostrarErro('Selecione uma imagem antes de gerar.');
+      return;
+    }
+
+    setCarregando(true);
+
+    try {
+      const formData = new FormData();
+      if (mensagem) formData.append('mensagem', mensagem);
+      if (imagem) formData.append('imagem', imagem);
+      formData.append('tom', tomAtual);
+
+      const resp = await fetch('/api/responder', {
+        method: 'POST',
+        headers: { 'x-api-key': apiKey },
+        body: formData,
+      });
+
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error || 'Erro desconhecido');
+
+      mostrarResposta(data.resposta, mensagem || '[imagem]');
+    } catch (err) {
+      mostrarErro(err.message);
+    } finally {
+      setCarregando(false);
+    }
+  }
+
+  function setCarregando(v) {
+    const btn = document.getElementById('btnGerar');
+    const icon = document.getElementById('btnIcon');
+    const txt = document.getElementById('btnText');
+    btn.disabled = v;
+    if (v) {
+      icon.outerHTML = '<div class="spinner" id="btnIcon"></div>';
+      txt.textContent = 'Gerando...';
+    } else {
+      document.getElementById('btnIcon').outerHTML = '<span id="btnIcon">✨</span>';
+      txt.textContent = 'Gerar Resposta';
+    }
+  }
+
+  function mostrarResposta(resposta, contexto) {
+    const area = document.getElementById('resultadoArea');
+    area.innerHTML = `
+      <div class="resultado-box" id="respostaBox">${escapeHtml(resposta)}</div>
+      <div class="resultado-actions">
+        <button class="btn-copiar" id="btnCopiar" onclick="copiarResposta()">
+          📋 Copiar resposta
+        </button>
+        <button class="btn-limpar" onclick="limparResposta()">🗑️</button>
+      </div>
+    `;
+
+    const agora = new Date();
+    historico.unshift({
+      contexto: contexto.substring(0, 60) + (contexto.length > 60 ? '...' : ''),
+      resposta,
+      hora: agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+    });
+    if (historico.length > 6) historico.pop();
+    salvarHistorico();
+    renderHistorico();
+  }
+
+  function mostrarErro(msg) {
+    const area = document.getElementById('resultadoArea');
+    area.innerHTML = `
+      <div class="resultado-vazio">
+        <div class="resultado-vazio-icon">😕</div>
+        <div class="resultado-vazio-text">${escapeHtml(msg)}</div>
+      </div>
+    `;
+    setTimeout(limparResposta, 4000);
+  }
+
+  function limparResposta() {
+    document.getElementById('resultadoArea').innerHTML = `
+      <div class="resultado-vazio" id="resultadoVazio">
+        <div class="resultado-vazio-icon">💭</div>
+        <div class="resultado-vazio-text">
+          Cole a reclamação ao lado e clique em<br><strong style="color: var(--text)">Gerar Resposta</strong> para ver a sugestão aqui.
+        </div>
+      </div>
+    `;
+  }
+
+  async function copiarResposta() {
+    const box = document.getElementById('respostaBox');
+    if (!box) return;
+    await navigator.clipboard.writeText(box.textContent);
+    const btn = document.getElementById('btnCopiar');
+    btn.textContent = '✅ Copiado!';
+    btn.className = 'btn-copiar copiado';
+    setTimeout(() => {
+      btn.innerHTML = '📋 Copiar resposta';
+      btn.className = 'btn-copiar';
+    }, 2000);
+  }
+
+  // HISTÓRICO
+  function renderHistorico() {
+    const section = document.getElementById('historicoSection');
+    const lista = document.getElementById('historicoLista');
+    if (historico.length === 0) { section.style.display = 'none'; return; }
+    section.style.display = 'block';
+    lista.innerHTML = historico.map((h, i) => `
+      <div class="historico-item" onclick="carregarHistoricoItem(${i})">
+        <div class="historico-msg">📝 ${escapeHtml(h.contexto)}</div>
+        <div class="historico-time">${h.hora}</div>
+      </div>
+    `).join('');
+  }
+
+  function carregarHistoricoItem(i) {
+    mostrarResposta(historico[i].resposta, historico[i].contexto);
+  }
+
+  function salvarHistorico() {
+    try { localStorage.setItem('cr_historico', JSON.stringify(historico)); } catch(e){}
+  }
+
+  function carregarHistorico() {
+    try {
+      const h = localStorage.getItem('cr_historico');
+      if (h) { historico = JSON.parse(h); renderHistorico(); }
+    } catch(e){}
+  }
+
+  // MODAL
+  function abrirModal() {
+    document.getElementById('modalOverlay').classList.add('open');
+    setTimeout(() => document.getElementById('apiKeyInput').focus(), 100);
+  }
+
+  function fecharModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+
+  function fecharModalFora(e) {
+    if (e.target === document.getElementById('modalOverlay')) fecharModal();
+  }
+
+  function salvarConfig() {
+    const key = document.getElementById('apiKeyInput').value.trim();
+    if (!key) return;
+    localStorage.setItem('anthropic_key', key);
+    atualizarStatus(true);
+    fecharModal();
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') fecharModal();
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') gerarResposta();
+  });
+
+  function escapeHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+</script>
+</body>
+</html>
